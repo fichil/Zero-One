@@ -1,0 +1,14 @@
+{
+  "character_id": "zero_one",
+  "display_name": "Zero-One",
+  "reference_image": "assets/reference/characters/zero_one/zero_one_ep001_s02.png",
+  "source_image": "assets/images/ep001/s02.png",
+  "source_episode": "ep001",
+  "source_shot": "s02",
+  "usage": "Primary character reference for Zero-One in ep001 and future episode image generation.",
+  "visual_rules": [
+    "Use this generated S02 image as the sole visual identity anchor for Zero-One.",
+    "Keep the chibi queen silhouette, pale hair, half-lidded cold expression, black-and-gold sci-fi styling, mechanical throne, mechanical tentacles, and floating crown.",
+    "Do not replace Zero-One with the older design-sheet helmet look unless a future episode explicitly changes the reference."
+  ]
+}

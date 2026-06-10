@@ -1,0 +1,61 @@
+Create video s01: outputs\ep001\clips\s01.mp4
+Video video_6a28f243ed548191a4ce4e0f17e1faab046b9d57afb39702: in_progress
+Video video_6a28f243ed548191a4ce4e0f17e1faab046b9d57afb39702: queued
+Video video_6a28f243ed548191a4ce4e0f17e1faab046b9d57afb39702: in_progress
+Video video_6a28f243ed548191a4ce4e0f17e1faab046b9d57afb39702: completed
+Wrote outputs\ep001\clips\s01.mp4
+Create video s02: outputs\ep001\clips\s02.mp4
+Video video_6a28f2cc95108191865ff875f1a8813f08ec270e8caa13cf: in_progress
+Video video_6a28f2cc95108191865ff875f1a8813f08ec270e8caa13cf: queued
+Video video_6a28f2cc95108191865ff875f1a8813f08ec270e8caa13cf: in_progress
+Video video_6a28f2cc95108191865ff875f1a8813f08ec270e8caa13cf: completed
+Wrote outputs\ep001\clips\s02.mp4
+Create video s03: outputs\ep001\clips\s03.mp4
+Video video_6a28f358bf2881919062894c86cc331204ea7ae1683840d4: in_progress
+Video video_6a28f358bf2881919062894c86cc331204ea7ae1683840d4: queued
+Video video_6a28f358bf2881919062894c86cc331204ea7ae1683840d4: in_progress
+Video video_6a28f358bf2881919062894c86cc331204ea7ae1683840d4: completed
+Wrote outputs\ep001\clips\s03.mp4
+Create video s04: outputs\ep001\clips\s04.mp4
+Video video_6a28f3de0a8c8190bd8346da5e5476aa0f92035fe249362d: in_progress
+Video video_6a28f3de0a8c8190bd8346da5e5476aa0f92035fe249362d: queued
+Video video_6a28f3de0a8c8190bd8346da5e5476aa0f92035fe249362d: in_progress
+Video video_6a28f3de0a8c8190bd8346da5e5476aa0f92035fe249362d: completed
+Wrote outputs\ep001\clips\s04.mp4
+Create video s05: outputs\ep001\clips\s05.mp4
+Video video_6a28f47ae8288190a714d53da4ab208b0a41101c085bc952: in_progress
+Video video_6a28f47ae8288190a714d53da4ab208b0a41101c085bc952: queued
+Video video_6a28f47ae8288190a714d53da4ab208b0a41101c085bc952: in_progress
+Video video_6a28f47ae8288190a714d53da4ab208b0a41101c085bc952: completed
+Wrote outputs\ep001\clips\s05.mp4
+Create video s06: outputs\ep001\clips\s06.mp4
+Video video_6a28f5147e2c81939ca573306a4fa1440bb1a7a9c45d28c4: in_progress
+Video video_6a28f5147e2c81939ca573306a4fa1440bb1a7a9c45d28c4: queued
+Video video_6a28f5147e2c81939ca573306a4fa1440bb1a7a9c45d28c4: in_progress
+Video video_6a28f5147e2c81939ca573306a4fa1440bb1a7a9c45d28c4: completed
+Wrote outputs\ep001\clips\s06.mp4
+Create video s07: outputs\ep001\clips\s07.mp4
+Video video_6a28f5b4a2ec81909342e2434ba8a54b076034478687ffb8: in_progress
+Video video_6a28f5b4a2ec81909342e2434ba8a54b076034478687ffb8: queued
+Video video_6a28f5b4a2ec81909342e2434ba8a54b076034478687ffb8: in_progress
+Video video_6a28f5b4a2ec81909342e2434ba8a54b076034478687ffb8: completed
+Wrote outputs\ep001\clips\s07.mp4
+Create video s08: outputs\ep001\clips\s08.mp4
+Video video_6a28f64feba481918709387a90699efc0a31358ef53cc146: in_progress
+Video video_6a28f64feba481918709387a90699efc0a31358ef53cc146: queued
+Video video_6a28f64feba481918709387a90699efc0a31358ef53cc146: in_progress
+Video video_6a28f64feba481918709387a90699efc0a31358ef53cc146: completed
+Wrote outputs\ep001\clips\s08.mp4
+Create video s09: outputs\ep001\clips\s09.mp4
+Video video_6a28f6eacd2881908d21dbc8ef671f880c95012ecaf68866: in_progress
+Video video_6a28f6eacd2881908d21dbc8ef671f880c95012ecaf68866: queued
+Video video_6a28f6eacd2881908d21dbc8ef671f880c95012ecaf68866: in_progress
+Video video_6a28f6eacd2881908d21dbc8ef671f880c95012ecaf68866: completed
+Wrote outputs\ep001\clips\s09.mp4
+Create video s10: outputs\ep001\clips\s10.mp4
+Video video_6a28f774ab788191878a54b695477612060364c33bd79e7c: in_progress
+Video video_6a28f774ab788191878a54b695477612060364c33bd79e7c: queued
+Video video_6a28f774ab788191878a54b695477612060364c33bd79e7c: in_progress
+Video video_6a28f774ab788191878a54b695477612060364c33bd79e7c: completed
+Wrote outputs\ep001\clips\s10.mp4
+Wrote outputs\ep001\video_jobs.json

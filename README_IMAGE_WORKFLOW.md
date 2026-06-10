@@ -78,3 +78,41 @@ outputs/ep001/contact_sheet.jpg
 ```
 
 如果某个 shot 的 `image_prompt` 为空，脚本会用 `visual`、`character_action` 和 episode 顶层 `style` 自动拼成 prompt。
+
+## 角色参考库
+
+第一集确认后的 Zero-One 角色参考图保存在：
+
+```text
+assets/reference/characters/zero_one/zero_one_ep001_s02.png
+```
+
+后续剧集生成 Zero-One 角色镜头时，优先把这张图作为唯一角色参考：
+
+```powershell
+python scripts/generate_images_openai.py --shot-ids s03,s04 --force --quality low --reference-image assets/reference/characters/zero_one/zero_one_ep001_s02.png
+```
+
+`--shot-ids` 只重生成指定分镜；`--reference-image` 会把参考图传给 OpenAI Images Edit 接口，用来稳定角色形象。
+
+## 图片到最终成片
+
+第一版成片流水线分为四步：
+
+```powershell
+python scripts/prepare_video_refs.py episodes/ep001_moon_pink.json --force
+python scripts/generate_videos_openai.py episodes/ep001_moon_pink.json --model sora-2 --size 720x1280 --seconds 8
+python scripts/generate_voice_openai.py episodes/ep001_moon_pink.json
+python scripts/assemble_final_video.py episodes/ep001_moon_pink.json
+```
+
+输出路径：
+
+```text
+outputs/ep001/video_refs/
+outputs/ep001/clips/
+outputs/ep001/audio/
+outputs/ep001/final/ep001_final.mp4
+```
+
+`generate_videos_openai.py` 会把每个分镜图作为 Sora 输入参考图，生成独立视频片段。`generate_voice_openai.py` 会按 `voice` 字段生成每条台词的音频。`assemble_final_video.py` 会把视频裁到分镜时长、配音、拼接并烧录字幕。

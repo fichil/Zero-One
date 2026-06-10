@@ -1,0 +1,104 @@
+{
+  "audio": [
+    {
+      "shot_id": "s01",
+      "status": "generated",
+      "voice_role": "narrator",
+      "voice": "alloy",
+      "text": "今天早上，人类发现月亮变成了草莓味。",
+      "audio_path": "outputs/ep001/audio/s01_narrator.mp3",
+      "updated_at": "2026-06-10T05:15:01.198902+00:00"
+    },
+    {
+      "shot_id": "s02",
+      "status": "generated",
+      "voice_role": "zero_one",
+      "voice": "coral",
+      "text": "宇宙，太正常了。",
+      "audio_path": "outputs/ep001/audio/s02_zero_one.mp3",
+      "updated_at": "2026-06-10T05:15:03.336996+00:00"
+    },
+    {
+      "shot_id": "s03",
+      "status": "generated",
+      "voice_role": "zero_one",
+      "voice": "coral",
+      "text": "我有一个绝妙的主意。",
+      "audio_path": "outputs/ep001/audio/s03_zero_one.mp3",
+      "updated_at": "2026-06-10T05:15:04.447757+00:00"
+    },
+    {
+      "shot_id": "s04",
+      "status": "generated",
+      "voice_role": "zero_one",
+      "voice": "coral",
+      "text": "白色看腻了。",
+      "audio_path": "outputs/ep001/audio/s04_zero_one.mp3",
+      "updated_at": "2026-06-10T05:15:05.661161+00:00"
+    },
+    {
+      "shot_id": "s05",
+      "status": "generated",
+      "voice_role": "zero_one",
+      "voice": "coral",
+      "text": "这是审美升级。",
+      "audio_path": "outputs/ep001/audio/s05_zero_one.mp3",
+      "updated_at": "2026-06-10T05:15:07.041331+00:00"
+    },
+    {
+      "shot_id": "s06",
+      "status": "generated",
+      "voice_role": "crowd",
+      "voice": "echo",
+      "text": "潮汐怎么加奶了？",
+      "audio_path": "outputs/ep001/audio/s06_crowd.mp3",
+      "updated_at": "2026-06-10T05:15:09.037333+00:00"
+    },
+    {
+      "shot_id": "s07",
+      "status": "generated",
+      "voice_role": "crowd",
+      "voice": "echo",
+      "text": "论文题目重写！",
+      "audio_path": "outputs/ep001/audio/s07_crowd.mp3",
+      "updated_at": "2026-06-10T05:15:10.587242+00:00"
+    },
+    {
+      "shot_id": "s08",
+      "status": "generated",
+      "voice_role": "crowd",
+      "voice": "echo",
+      "text": "排队三公里？",
+      "audio_path": "outputs/ep001/audio/s08_crowd.mp3",
+      "updated_at": "2026-06-10T05:15:12.888406+00:00"
+    },
+    {
+      "shot_id": "s09",
+      "status": "generated",
+      "voice_role": "robot_002",
+      "voice": "ash",
+      "text": "老板，后果严重！",
+      "audio_path": "outputs/ep001/audio/s09_robot_002.mp3",
+      "updated_at": "2026-06-10T05:15:14.197183+00:00"
+    },
+    {
+      "shot_id": "s10",
+      "status": "generated",
+      "voice_role": "zero_one",
+      "voice": "coral",
+      "text": "完美，就应该这样。",
+      "audio_path": "outputs/ep001/audio/s10_zero_one.mp3",
+      "updated_at": "2026-06-10T05:15:15.879409+00:00"
+    }
+  ],
+  "episode_id": "ep001",
+  "model": "gpt-4o-mini-tts",
+  "response_format": "mp3",
+  "voices": {
+    "narrator": "alloy",
+    "zero_one": "coral",
+    "crowd": "echo",
+    "robot_002": "ash"
+  },
+  "updated_at": "2026-06-10T05:14:56.454238+00:00"
+}

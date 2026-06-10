@@ -41,7 +41,7 @@ def main() -> int:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     episode_dir = Path("outputs") / episode["episode_id"]
-    search_dirs = [Path("assets/clips"), episode_dir]
+    search_dirs = [Path("assets/clips"), episode_dir / "clips", episode_dir]
     clips = []
     missing = []
     for shot in episode["shots"]:

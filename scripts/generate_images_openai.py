@@ -10,6 +10,7 @@ import math
 import os
 import sys
 import textwrap
+from contextlib import ExitStack
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -141,13 +142,56 @@ def image_bytes_from_response(response: Any) -> bytes:
     raise RuntimeError("OpenAI image response did not include b64_json or url image data.")
 
 
-def generate_image(client: Any, *, model: str, size: str, prompt: str) -> bytes:
-    response = client.images.generate(
-        model=model,
-        prompt=prompt,
-        size=size,
-    )
+def generate_image(client: Any, *, model: str, size: str, prompt: str, quality: str | None) -> bytes:
+    request: dict[str, Any] = {
+        "model": model,
+        "prompt": prompt,
+        "size": size,
+    }
+    if quality:
+        request["quality"] = quality
+
+    response = client.images.generate(**request)
     return image_bytes_from_response(response)
+
+
+def generate_image_with_references(
+    client: Any,
+    *,
+    model: str,
+    size: str,
+    prompt: str,
+    quality: str | None,
+    reference_images: list[Path],
+) -> bytes:
+    request: dict[str, Any] = {
+        "model": model,
+        "prompt": prompt,
+        "size": size,
+    }
+    if quality:
+        request["quality"] = quality
+
+    with ExitStack() as stack:
+        request["image"] = [stack.enter_context(path.open("rb")) for path in reference_images]
+        response = client.images.edit(**request)
+    return image_bytes_from_response(response)
+
+
+def build_reference_prompt(prompt: str, reference_images: list[Path]) -> str:
+    if not reference_images:
+        return prompt
+
+    return "\n".join(
+        [
+            "Use the provided reference image(s) only as the character identity anchor for Zero-One.",
+            "For this episode, Zero-One must match the S02 reference identity: pale-haired chibi AI queen, half-lidded cool expression, black-and-gold sci-fi styling, mechanical tentacles, floating crown, and mechanical throne energy.",
+            "Keep the shot's action, setting, and story beat from the prompt below. Do not copy the exact S02 composition unless the shot calls for it.",
+            "Do not use the older design-sheet helmet look in this rerun.",
+            "",
+            prompt,
+        ]
+    )
 
 
 def save_contact_sheet(image_paths: list[Path], output_path: Path) -> None:
@@ -194,15 +238,25 @@ def build_prompt_payload(
     episode_id: str,
     model: str,
     size: str,
+    quality: str | None,
+    reference_images: list[Path],
+    shot_ids: set[str] | None,
     prompt_records: list[dict[str, Any]],
 ) -> dict[str, Any]:
-    return {
+    payload = {
         "episode_id": episode_id,
         "model": model,
         "size": size,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "prompts": prompt_records,
     }
+    if quality:
+        payload["quality"] = quality
+    if reference_images:
+        payload["reference_images"] = [relative_display_path(path) for path in reference_images]
+    if shot_ids:
+        payload["shot_ids"] = sorted(shot_ids)
+    return payload
 
 
 def parse_non_negative_int(value: str) -> int:
@@ -213,6 +267,28 @@ def parse_non_negative_int(value: str) -> int:
     if parsed < 0:
         raise argparse.ArgumentTypeError("--limit must be a non-negative integer")
     return parsed
+
+
+def parse_shot_ids(value: str | None) -> set[str] | None:
+    if not value:
+        return None
+
+    shot_ids = {item.strip() for item in value.split(",") if item.strip()}
+    if not shot_ids:
+        raise argparse.ArgumentTypeError("--shot-ids must contain at least one shot id")
+    bad_ids = sorted(shot_id for shot_id in shot_ids if len(shot_id) != 3 or not shot_id.startswith("s") or not shot_id[1:].isdigit())
+    if bad_ids:
+        raise argparse.ArgumentTypeError("--shot-ids values must look like s02,s03; bad values: " + ", ".join(bad_ids))
+    return shot_ids
+
+
+def resolve_reference_images(values: list[str]) -> list[Path]:
+    paths = [Path(value) for value in values]
+    missing = [path for path in paths if not path.exists()]
+    if missing:
+        missing_text = ", ".join(path.as_posix() for path in missing)
+        raise FileNotFoundError(f"reference image not found: {missing_text}")
+    return paths
 
 
 def parse_args() -> argparse.Namespace:
@@ -234,6 +310,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", help="directory for prompt log and contact sheet; defaults to outputs/<episode_id>")
     parser.add_argument("--model", default=DEFAULT_MODEL, help=f"OpenAI image model, default: {DEFAULT_MODEL}")
     parser.add_argument("--size", default=DEFAULT_SIZE, help=f"image size, default: {DEFAULT_SIZE}")
+    parser.add_argument("--quality", choices=["low", "medium", "high", "auto"], help="optional image quality")
+    parser.add_argument("--shot-ids", type=parse_shot_ids, help="comma-separated shot ids to generate, for example: s03,s04")
+    parser.add_argument(
+        "--reference-image",
+        action="append",
+        default=[],
+        help="reference image path; can be supplied multiple times",
+    )
     parser.add_argument("--force", action="store_true", help="overwrite existing images")
     parser.add_argument(
         "--limit",
@@ -253,6 +337,7 @@ def main() -> int:
     shots = episode.get("shots")
     if not isinstance(shots, list) or not shots:
         raise ValueError("episode JSON must contain a non-empty shots array")
+    reference_images = resolve_reference_images(args.reference_image)
 
     images_dir = Path(args.images_dir) if args.images_dir else Path("assets") / "images" / episode_id
     output_dir = Path(args.output_dir) if args.output_dir else Path("outputs") / episode_id
@@ -269,6 +354,11 @@ def main() -> int:
             raise ValueError(f"shots[{index}] must be an object")
         shot_id = normalize_text(shot.get("shot_id")) or f"s{index:02d}"
         prompt, prompt_source = resolve_prompt(episode, shot)
+        is_selected = args.shot_ids is None or shot_id in args.shot_ids
+        if is_selected:
+            prompt = build_reference_prompt(prompt, reference_images)
+            if reference_images:
+                prompt_source += "+reference_images"
         image_path = images_dir / f"{shot_id}.png"
         image_paths.append(image_path)
         prompt_records.append(
@@ -285,18 +375,29 @@ def main() -> int:
         episode_id=episode_id,
         model=args.model,
         size=args.size,
+        quality=args.quality,
+        reference_images=reference_images,
+        shot_ids=args.shot_ids,
         prompt_records=prompt_records,
     )
 
     require_pillow()
     limit_allows_generation = args.limit is None or args.limit > 0
-    needs_generation = limit_allows_generation and any(args.force or not image_path.exists() for image_path in image_paths)
+    needs_generation = limit_allows_generation and any(
+        (args.shot_ids is None or record["shot_id"] in args.shot_ids) and (args.force or not image_path.exists())
+        for record, image_path in zip(prompt_records, image_paths)
+    )
     client = make_openai_client() if needs_generation else None
     write_prompts_used(prompts_path, prompt_payload)
 
     generated_count = 0
     for record, image_path in zip(prompt_records, image_paths):
         shot_id = record["shot_id"]
+        if args.shot_ids is not None and shot_id not in args.shot_ids:
+            record["status"] = "skipped_shot_filter"
+            print(f"Skip {shot_id}: not selected by --shot-ids")
+            write_prompts_used(prompts_path, prompt_payload)
+            continue
         if image_path.exists() and not args.force:
             record["status"] = "skipped_existing"
             print(f"Skip {shot_id}: {relative_display_path(image_path)} exists")
@@ -312,7 +413,23 @@ def main() -> int:
             print(f"Generate {shot_id}: {relative_display_path(image_path)}")
             if client is None:
                 raise RuntimeError("OpenAI client was not initialized.")
-            image_bytes = generate_image(client, model=args.model, size=args.size, prompt=record["prompt"])
+            if reference_images:
+                image_bytes = generate_image_with_references(
+                    client,
+                    model=args.model,
+                    size=args.size,
+                    prompt=record["prompt"],
+                    quality=args.quality,
+                    reference_images=reference_images,
+                )
+            else:
+                image_bytes = generate_image(
+                    client,
+                    model=args.model,
+                    size=args.size,
+                    prompt=record["prompt"],
+                    quality=args.quality,
+                )
             image_path.write_bytes(image_bytes)
             record["status"] = "generated"
             generated_count += 1
