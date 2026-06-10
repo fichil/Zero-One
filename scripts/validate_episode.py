@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate a Zero-One episode production JSON file."""
+"""Validate a production-ready Zero-One episode JSON file."""
 
 from __future__ import annotations
 
@@ -10,8 +10,21 @@ import sys
 from pathlib import Path
 
 
-K_SHOT_ID = "\u955c\u5934\u7f16\u53f7"
-K_DURATION = "\u65f6\u957f\u79d2"
+REQUIRED_SHOT_FIELDS = [
+    "shot_id",
+    "duration_sec",
+    "visual",
+    "dialogue",
+    "caption",
+    "image_prompt",
+    "video_prompt",
+    "voice",
+]
+
+OPTIONAL_PRODUCTION_FIELDS = [
+    "type",
+    "character_action",
+]
 
 
 def load_episode(path: Path) -> dict:
@@ -24,77 +37,45 @@ def require(condition: bool, message: str) -> None:
         raise ValueError(message)
 
 
-def shot_map(items: list[dict], label: str) -> dict[str, int]:
-    result: dict[str, int] = {}
-    for item in items:
-        require(K_SHOT_ID in item, f"{label}: missing shot id")
-        require(K_DURATION in item, f"{label}: missing duration for {item.get(K_SHOT_ID)}")
-        shot_id = item[K_SHOT_ID]
-        duration = item[K_DURATION]
-        require(isinstance(shot_id, str), f"{label}: shot id must be a string")
-        require(re.fullmatch(r"S\d{2}", shot_id) is not None, f"{label}: bad shot id {shot_id}")
-        require(isinstance(duration, int), f"{label}: duration must be an integer for {shot_id}")
-        require(duration > 0, f"{label}: duration must be positive for {shot_id}")
-        require(shot_id not in result, f"{label}: duplicate shot id {shot_id}")
-        result[shot_id] = duration
-    return result
+def require_non_empty_string(value: object, label: str) -> None:
+    require(isinstance(value, str) and value.strip(), f"{label} must be a non-empty string")
 
 
-def segment_map(items: list[dict]) -> dict[str, int]:
-    result: dict[str, int] = {}
-    for item in items:
-        shot_id = item.get("shot_id")
-        duration = item.get("duration_seconds")
-        require(isinstance(shot_id, str), "voiceover: shot_id must be a string")
-        require(re.fullmatch(r"S\d{2}", shot_id) is not None, f"voiceover: bad shot id {shot_id}")
-        require(isinstance(duration, int), f"voiceover: duration must be an integer for {shot_id}")
-        require(isinstance(item.get("text"), str) and item["text"].strip(), f"voiceover: empty text for {shot_id}")
-        require(shot_id not in result, f"voiceover: duplicate shot id {shot_id}")
-        result[shot_id] = duration
-    return result
+def validate_shots(shots: object) -> tuple[int, int]:
+    require(isinstance(shots, list) and shots, "shots must be a non-empty array")
+
+    total_duration = 0
+    seen_ids: set[str] = set()
+    for index, shot in enumerate(shots, start=1):
+        require(isinstance(shot, dict), f"shots[{index}] must be an object")
+
+        for field in REQUIRED_SHOT_FIELDS:
+            require(field in shot, f"shots[{index}] missing field: {field}")
+        for field in OPTIONAL_PRODUCTION_FIELDS:
+            require(field in shot, f"shots[{index}] missing production field: {field}")
+
+        shot_id = shot["shot_id"]
+        require(isinstance(shot_id, str), f"shots[{index}].shot_id must be a string")
+        require(re.fullmatch(r"s\d{2}", shot_id) is not None, f"bad shot_id: {shot_id}")
+        require(shot_id not in seen_ids, f"duplicate shot_id: {shot_id}")
+        seen_ids.add(shot_id)
+
+        duration = shot["duration_sec"]
+        require(isinstance(duration, int) and duration > 0, f"{shot_id}.duration_sec must be a positive integer")
+        total_duration += duration
+
+        for field in ["visual", "dialogue", "caption", "image_prompt", "video_prompt", "voice"]:
+            require_non_empty_string(shot[field], f"{shot_id}.{field}")
+
+    require(45 <= total_duration <= 90, f"total duration {total_duration}s is outside 45-90 seconds")
+    return len(shots), total_duration
 
 
-def validate_episode(episode: dict) -> None:
-    required = [
-        "episode_id",
-        "title",
-        "platform",
-        "aspect_ratio",
-        "duration_seconds",
-        "experiment_id",
-        "storyboard",
-        "prompts",
-        "voiceover",
-        "assets_plan",
-    ]
-    for key in required:
-        require(key in episode, f"missing top-level key: {key}")
-
-    require(episode["episode_id"] == "EP001", "episode_id must be EP001")
-    require(episode["experiment_id"] == "Universe-0001", "experiment_id must be Universe-0001")
-    require(episode["duration_seconds"] == 60, "duration_seconds must be 60")
-    require(episode["aspect_ratio"] == "9:16", "aspect_ratio must be 9:16")
-
-    storyboard = episode["storyboard"]
-    prompts = episode["prompts"]
-    voiceover = episode["voiceover"]
-    assets_plan = episode["assets_plan"]
-
-    storyboard_shots = shot_map(storyboard.get("shots", []), "storyboard")
-    prompt_shots = shot_map(prompts.get("shots", []), "prompts")
-    asset_shots = shot_map(assets_plan.get("shot_asset_map", []), "assets_plan")
-    voiceover_shots = segment_map(voiceover.get("segments", []))
-
-    expected_ids = [f"S{i:02d}" for i in range(1, 11)]
-    require(list(storyboard_shots.keys()) == expected_ids, "storyboard shot ids must be S01-S10")
-    require(prompt_shots == storyboard_shots, "prompts shots must align with storyboard")
-    require(asset_shots == storyboard_shots, "asset map shots must align with storyboard")
-    require(voiceover_shots == storyboard_shots, "voiceover segments must align with storyboard")
-    require(sum(storyboard_shots.values()) == episode["duration_seconds"], "shot durations must total 60 seconds")
-
-    flat = json.dumps(episode, ensure_ascii=False)
-    require("Universe-0001" in flat, "episode must contain Universe-0001")
-    require("\u65b9\u7cd6" in flat, "episode must contain Fangtang")
+def validate_episode(episode: dict) -> tuple[int, int]:
+    require(isinstance(episode, dict), "episode JSON must be an object")
+    require(episode.get("aspect_ratio") == "9:16", "aspect_ratio must be 9:16 for vertical video")
+    require("shots" in episode, "missing top-level key: shots")
+    return validate_shots(episode["shots"])
 
 
 def main() -> int:
@@ -105,15 +86,19 @@ def main() -> int:
     path = Path(args.episode)
     try:
         episode = load_episode(path)
-        validate_episode(episode)
+        shot_count, total_duration = validate_episode(episode)
+    except json.JSONDecodeError as exc:
+        print(f"Validation failed: invalid JSON: {exc}", file=sys.stderr)
+        return 1
     except Exception as exc:
         print(f"Validation failed: {exc}", file=sys.stderr)
         return 1
 
-    print(f"OK: {path}")
-    print("episode_id=EP001")
-    print("shots=10")
-    print("duration_seconds=60")
+    print("JSON OK")
+    print("vertical_video=True")
+    print(f"shots={shot_count}")
+    print(f"total_duration_sec={total_duration}")
+    print("duration_range=45-90")
     return 0
 
 

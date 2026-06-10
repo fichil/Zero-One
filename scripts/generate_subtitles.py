@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate an SRT subtitle file from episode voiceover segments."""
+"""Generate an SRT subtitle file from production episode shots."""
 
 from __future__ import annotations
 
@@ -20,13 +20,13 @@ def format_time(total_seconds: int) -> str:
     return f"{hours:02d}:{minutes:02d}:{seconds:02d},000"
 
 
-def build_srt(segments: list[dict]) -> str:
+def build_srt(shots: list[dict], text_field: str) -> str:
     blocks: list[str] = []
     cursor = 0
-    for index, segment in enumerate(segments, start=1):
+    for index, shot in enumerate(shots, start=1):
         start = cursor
-        end = cursor + segment["duration_seconds"]
-        text = segment["text"].strip()
+        end = cursor + shot["duration_sec"]
+        text = shot[text_field].strip()
         blocks.append(
             f"{index}\n"
             f"{format_time(start)} --> {format_time(end)}\n"
@@ -37,21 +37,21 @@ def build_srt(segments: list[dict]) -> str:
 
 
 def default_output_path(episode: dict) -> Path:
-    episode_id = episode["episode_id"].lower()
-    return Path("outputs") / episode_id / f"{episode_id}_subtitles.srt"
+    return Path("outputs") / episode["episode_id"] / f"{episode['episode_id']}_subtitles.srt"
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("episode", nargs="?", default="episodes/ep001_moon_pink.json")
     parser.add_argument("-o", "--output")
+    parser.add_argument("--source", choices=["caption", "dialogue"], default="caption")
     args = parser.parse_args()
 
     episode = load_episode(Path(args.episode))
     output_path = Path(args.output) if args.output else default_output_path(episode)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    srt = build_srt(episode["voiceover"]["segments"])
+    srt = build_srt(episode["shots"], args.source)
     output_path.write_text(srt, encoding="utf-8")
     print(f"Wrote {output_path}")
     return 0

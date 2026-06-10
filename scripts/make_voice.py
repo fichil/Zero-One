@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare a voiceover script without invoking a TTS provider."""
+"""Prepare a per-voice dialogue script without invoking a TTS provider."""
 
 from __future__ import annotations
 
@@ -14,8 +14,21 @@ def load_episode(path: Path) -> dict:
 
 
 def default_output_path(episode: dict) -> Path:
-    episode_id = episode["episode_id"].lower()
-    return Path("outputs") / episode_id / "voiceover_script.txt"
+    return Path("outputs") / episode["episode_id"] / "voiceover_script.txt"
+
+
+def build_voice_script(episode: dict) -> str:
+    lines = [
+        f"{episode['episode_id']} {episode['title']}",
+        f"Duration: {episode['duration_target_sec']} seconds",
+        "TTS status: pending provider integration. This file is script-only.",
+        "",
+    ]
+    for shot in episode["shots"]:
+        lines.append(f"[{shot['voice']}] {shot['shot_id']} / {shot['duration_sec']}s")
+        lines.append(shot["dialogue"].strip())
+        lines.append("")
+    return "\n".join(lines).rstrip() + "\n"
 
 
 def main() -> int:
@@ -28,14 +41,10 @@ def main() -> int:
     output_path = Path(args.output) if args.output else default_output_path(episode)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    content = (
-        f"{episode['episode_id']} {episode['title']}\n"
-        f"Duration: {episode['duration_seconds']} seconds\n"
-        "TTS status: pending provider integration. This file is script-only.\n\n"
-        f"{episode['voiceover']['script'].strip()}\n"
-    )
-    output_path.write_text(content, encoding="utf-8")
+    output_path.write_text(build_voice_script(episode), encoding="utf-8")
+    voices = sorted({shot["voice"] for shot in episode["shots"]})
     print(f"Wrote {output_path}")
+    print("Voices: " + ", ".join(voices))
     print("TTS pending: no audio file was generated.")
     return 0
 

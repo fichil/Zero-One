@@ -1,0 +1,10 @@
+s01 / 5s / narrator / 今天早上，人类发现月亮变成了草莓味。
+s02 / 6s / zero_one / 宇宙，太正常了。
+s03 / 5s / zero_one / 我有一个绝妙的主意。
+s04 / 6s / zero_one / 白色看腻了。
+s05 / 7s / zero_one / 这是审美升级。
+s06 / 6s / crowd / 潮汐怎么加奶了？
+s07 / 7s / crowd / 论文题目重写！
+s08 / 6s / crowd / 排队三公里？
+s09 / 5s / robot_002 / 老板，后果严重！
+s10 / 7s / zero_one / 完美，就应该这样。
