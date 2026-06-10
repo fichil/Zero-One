@@ -1,0 +1,2 @@
+# Current scripts use only the Python standard library.
+# Add TTS, video, or media-processing dependencies here when those integrations are introduced.

@@ -1,0 +1,81 @@
+{
+  "episode_id": "EP001",
+  "title": "月球粉红化",
+  "duration_seconds": 60,
+  "status": "waiting_for_clips",
+  "missing_clips": [
+    "S01",
+    "S02",
+    "S03",
+    "S04",
+    "S05",
+    "S06",
+    "S07",
+    "S08",
+    "S09",
+    "S10"
+  ],
+  "clips": [
+    {
+      "shot_id": "S01",
+      "duration_seconds": 5,
+      "clip": null,
+      "status": "missing"
+    },
+    {
+      "shot_id": "S02",
+      "duration_seconds": 6,
+      "clip": null,
+      "status": "missing"
+    },
+    {
+      "shot_id": "S03",
+      "duration_seconds": 5,
+      "clip": null,
+      "status": "missing"
+    },
+    {
+      "shot_id": "S04",
+      "duration_seconds": 6,
+      "clip": null,
+      "status": "missing"
+    },
+    {
+      "shot_id": "S05",
+      "duration_seconds": 7,
+      "clip": null,
+      "status": "missing"
+    },
+    {
+      "shot_id": "S06",
+      "duration_seconds": 6,
+      "clip": null,
+      "status": "missing"
+    },
+    {
+      "shot_id": "S07",
+      "duration_seconds": 7,
+      "clip": null,
+      "status": "missing"
+    },
+    {
+      "shot_id": "S08",
+      "duration_seconds": 6,
+      "clip": null,
+      "status": "missing"
+    },
+    {
+      "shot_id": "S09",
+      "duration_seconds": 5,
+      "clip": null,
+      "status": "missing"
+    },
+    {
+      "shot_id": "S10",
+      "duration_seconds": 7,
+      "clip": null,
+      "status": "missing"
+    }
+  ],
+  "note": "This manifest does not assemble video. Add per-shot clips to assets/clips or outputs/ep001."
+}

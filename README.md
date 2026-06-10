@@ -32,12 +32,51 @@ Zero-One/
 ├── README.md
 ├── LICENSE
 ├── 角色信息大纲.md
-└── DesignDrawing/
-    ├── 零壹女皇ai設計概念圖.png
-    ├── 零壹女皇的ai徽章展示.png
-    ├── 零壹女皇與黑金科幻設計.png
-    └── 零壹帝國品牌與角色設計.png
+├── Zero-One 示例剧情集.md
+├── Zero-One_动作模板表.xlsx
+├── DesignDrawing/
+│   └── ...
+├── episodes/
+│   └── ep001_moon_pink.json
+├── scripts/
+│   ├── validate_episode.py
+│   ├── export_prompts.py
+│   ├── generate_subtitles.py
+│   ├── make_voice.py
+│   └── assemble_video.py
+├── assets/
+│   ├── reference/
+│   ├── bgm/
+│   ├── sfx/
+│   └── clips/
+├── outputs/
+│   └── ep001/
+└── requirements.txt
 ```
+
+## 剧集制作文件
+
+第一集主文件位于：
+
+```text
+episodes/ep001_moon_pink.json
+```
+
+该文件整合了分镜、画面提示词、配音稿、资产规划和追踪彩蛋。EP001 的实验编号为 `Universe-0001`，彩蛋核心为黑色立方体「方糖」。
+
+## 脚本工具
+
+当前脚本只依赖 Python 标准库。推荐先运行校验，再导出派生产物：
+
+```bash
+python scripts/validate_episode.py episodes/ep001_moon_pink.json
+python scripts/export_prompts.py episodes/ep001_moon_pink.json
+python scripts/generate_subtitles.py episodes/ep001_moon_pink.json
+python scripts/make_voice.py episodes/ep001_moon_pink.json
+python scripts/assemble_video.py episodes/ep001_moon_pink.json
+```
+
+`make_voice.py` 只生成待配音文案，不调用 TTS。`assemble_video.py` 只生成剪辑清单，不直接合成视频。
 
 ## 使用与署名
 
