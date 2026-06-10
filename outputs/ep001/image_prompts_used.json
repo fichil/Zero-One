@@ -1,0 +1,78 @@
+{
+  "episode_id": "ep001",
+  "model": "gpt-image-2",
+  "size": "1024x1536",
+  "generated_at": "2026-06-10T02:58:47.526684+00:00",
+  "prompts": [
+    {
+      "shot_id": "s01",
+      "image_path": "assets/images/ep001/s01.png",
+      "prompt_source": "image_prompt",
+      "prompt": "9:16竖屏，Q版黑金机械荒诞动画风格，未来城市清晨，巨大粉红色月球挂在天空，全城人类抬头沉默，粉色月光，高对比，喜剧冷场，干净构图，底部留字幕安全区",
+      "status": "generated"
+    },
+    {
+      "shot_id": "s02",
+      "image_path": "assets/images/ep001/s02.png",
+      "prompt_source": "image_prompt",
+      "prompt": "零壹 Zero-One，Q版AI母体，大头小身体，黑金配色，半睁眼嫌弃脸，机械触手，悬浮皇冠，黑金机械王座，方糖黑立方漂浮，宇宙管理室，全息屏幕，9:16竖屏",
+      "status": "skipped_limit"
+    },
+    {
+      "shot_id": "s03",
+      "image_path": "assets/images/ep001/s03.png",
+      "prompt_source": "image_prompt",
+      "prompt": "零壹喝可乐特写，黑金可乐罐，机械触手端饮料，半睁眼微亮，大头小身体，蓝白电流气泡，小机器人背景僵住，Q版黑金机械荒诞动画，9:16",
+      "status": "skipped_limit"
+    },
+    {
+      "shot_id": "s04",
+      "image_path": "assets/images/ep001/s04.png",
+      "prompt_source": "image_prompt",
+      "prompt": "宇宙调色盘，全息月球颜色参数，零壹伸手点按，黑金UI，亮粉色滑块，机械触手乱按确认键，半睁眼冷脸，Q版科幻喜剧，9:16竖屏",
+      "status": "skipped_limit"
+    },
+    {
+      "shot_id": "s05",
+      "image_path": "assets/images/ep001/s05.png",
+      "prompt_source": "image_prompt",
+      "prompt": "方糖黑立方特写，黑色立方体，金色01编号，蓝白电弧，机械触手轻轻摇晃，粉色月球生成，Reality Patch 100%，Q版黑金机械荒诞动画，9:16",
+      "status": "skipped_limit"
+    },
+    {
+      "shot_id": "s06",
+      "image_path": "assets/images/ep001/s06.png",
+      "prompt_source": "image_prompt",
+      "prompt": "未来城市海岸街道，粉色月光，奶茶色潮水涌上街道，珍珠泡泡，路人震惊，轻喜剧灾难，干净无血腥，Q版荒诞动画，9:16竖屏",
+      "status": "skipped_limit"
+    },
+    {
+      "shot_id": "s07",
+      "image_path": "assets/images/ep001/s07.png",
+      "prompt_source": "image_prompt",
+      "prompt": "天文台，望远镜，屏幕里巨大粉色月球，天文学家集体崩溃，小机器人贴问题不大标签，白板公式变爱心，Q版黑金机械荒诞动画，9:16",
+      "status": "skipped_limit"
+    },
+    {
+      "shot_id": "s08",
+      "image_path": "assets/images/ep001/s08.png",
+      "prompt_source": "image_prompt",
+      "prompt": "城市高楼观景台，巨大粉色月球背景，情侣游客排队拍照，队伍夸张延伸，黑金保安机器人举错牌，短视频打卡喜剧，9:16竖屏",
+      "status": "skipped_limit"
+    },
+    {
+      "shot_id": "s09",
+      "image_path": "assets/images/ep001/s09.png",
+      "prompt_source": "image_prompt",
+      "prompt": "秘书机器人002，黑金迷你机器人，抱厚厚灾难报告，冲进宇宙管理室，零壹半睁眼嫌弃，机械触手拨开报告，黑金科幻喜剧，9:16",
+      "status": "skipped_limit"
+    },
+    {
+      "shot_id": "s10",
+      "image_path": "assets/images/ep001/s10.png",
+      "prompt_source": "image_prompt",
+      "prompt": "零壹漂浮旋转，机械触手展开，悬浮皇冠发光，粉色月球背后，方糖黑立方靠近镜头，Universe-0001实验编号，Q版黑金机械荒诞动画，9:16竖屏",
+      "status": "skipped_limit"
+    }
+  ]
+}

@@ -8,3 +8,13 @@ desktop.ini
 .vscode/
 *.swp
 *.swo
+
+# Python files
+__pycache__/
+*.pyc
+
+# Local secrets
+.env
+.env.*
+!.env.example
+.dev
